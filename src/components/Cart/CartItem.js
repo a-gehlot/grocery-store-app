@@ -18,7 +18,7 @@ function CartItem({ item }) {
     } else {
       dispatch(removeItemFromCart(item.id))
     }
-  }
+  };
 
   
 

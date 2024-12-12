@@ -1,7 +1,11 @@
+import { createSelector } from 'reselect';
+
 const ADD_ITEM = "cart/ADD_ITEM"
 const REMOVE_ITEM = "cart/REMOVE_ITEM"
 const INCREASE_COUNT = "cart/INCREASE_COUNT"
 const DECREASE_COUNT = "cart/DECREASE_COUNT"
+const CLEAR_CART = "cart/CLEAR_CART"
+
 
 const cartReducer = (state={}, action) => {
     switch(action.type) {
@@ -34,6 +38,9 @@ const cartReducer = (state={}, action) => {
             }};
             return newState;
         }
+        case CLEAR_CART: {
+            return {};
+        }
         default:
             return state;
     }
@@ -42,29 +49,49 @@ const cartReducer = (state={}, action) => {
 export const increaseItemCount = (id) => {
     return {
         type: INCREASE_COUNT,
-        id: id
+        id
     }
 }
 
 export const decreaseItemCount = (id) => {
     return {
         type: DECREASE_COUNT,
-        id: id
+        id
     }
 }
 
 export const addItemToCart = (id) => {
     return {
         type: ADD_ITEM,
-        id: id,
+        id
     }
 }
 
 export const removeItemFromCart = (id) => {
     return {
         type: REMOVE_ITEM,
-        id: id
+        id
     }
 }
+
+export const clearItemsFromCart = () => {
+    return {
+        type: CLEAR_CART,
+    }
+}
+
+export const getCartItems = createSelector(
+    // Input selector: This gets the part of the state you care about
+    (state) => state.cart,
+    (state) => state.produce,
+
+    // Output selector: Combines the data and returns the result
+    (cart, produce) => {
+        return Object.values(cart).map(item => ({
+            ...item,
+            ...produce[item.id]
+        }));
+    }
+);
 
 export default cartReducer;
